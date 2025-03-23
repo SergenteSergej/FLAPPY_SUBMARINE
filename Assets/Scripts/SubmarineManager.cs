@@ -1,16 +1,26 @@
 using UnityEngine;
+using TMPro;
+using System.Security.Cryptography;
+
 public class SubmarineManager : MonoBehaviour
 {
     [SerializeField] float fuel = 100f;
     [SerializeField] float maxFuel = 100f;
     [SerializeField] float fuelUsageSpeed = 1f;
     [SerializeField] float mineFuelReduction = 5f;
+    [SerializeField] float boxFuelGain = 10f;
 
     [SerializeField] Vector3 impulseForce = Vector3.up * 10;
     [SerializeField] Vector3 constantForce = Vector3.up * 20;
     [SerializeField] Vector3 forwardForce = Vector3.right * 20;
 
     [SerializeField] ForceMode forceMode = ForceMode.Force;
+
+    [SerializeField] TextMeshProUGUI fuelText;
+    [SerializeField] GameObject gameOverPanel;
+
+    [SerializeField] private Color fullFuelColor = Color.green;
+    [SerializeField] private Color lowFuelColor = Color.red;
 
     bool _thrust;
     Rigidbody rb;
@@ -40,6 +50,9 @@ public class SubmarineManager : MonoBehaviour
     void Update()
     {
         fuel -= Time.deltaTime * fuelUsageSpeed;
+
+        UpdateFuelUI();
+
         if (fuel <= 0)
         {
             enabled = false;
@@ -92,7 +105,7 @@ public class SubmarineManager : MonoBehaviour
         if (other.gameObject.CompareTag("Box"))
         {
             Destroy(other.gameObject);
-            fuel = Mathf.Clamp(fuel + fuelUsageSpeed, 0, maxFuel);
+            fuel = Mathf.Clamp(fuel + boxFuelGain, 0, maxFuel);
             Debug.Log($"Fuel gained: {fuel}");
         }
         else if (other.gameObject.CompareTag("Mine"))
@@ -100,16 +113,40 @@ public class SubmarineManager : MonoBehaviour
             Destroy(other.gameObject);
             fuel = Mathf.Clamp(fuel - mineFuelReduction, 0, maxFuel);
             Debug.Log($"Fuel lost: {fuel}");
+
+            UpdateFuelUI();
+
             if (fuel <= 0)
             {
-                enabled = false;
+                GameOver();
             }
         }
-
     }
+
     private void OnCollisionEnter(Collision other)
     {
         rb.isKinematic = true;
+        enabled = false;
+        GameOver();
+    }
+
+    void UpdateFuelUI()
+    {
+        if (fuelText != null)
+        {
+            fuelText.text = "Fuel: " + fuel.ToString("F0");
+
+            float fuelPercentage = fuel / maxFuel;
+
+            fuelText.color = Color.Lerp(lowFuelColor, fullFuelColor, fuelPercentage);
+
+        }
+    }
+
+    void GameOver()
+    {
+        fuelText.gameObject.SetActive(false);
+        gameOverPanel.SetActive(true);
         enabled = false;
     }
 }

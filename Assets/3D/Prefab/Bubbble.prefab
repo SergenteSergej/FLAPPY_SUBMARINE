@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7227047115151512238}
   - component: {fileID: 3502008248755033652}
   - component: {fileID: 7568684895731097018}
+  - component: {fileID: -1545552129455931000}
   m_Layer: 0
   m_Name: Bubbble
   m_TagString: Overridea
@@ -127,3 +128,16 @@ ConstantForce:
   m_RelativeForce: {x: 0, y: 0.87, z: 0}
   m_Torque: {x: 0, y: 2.09, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
+--- !u!114 &-1545552129455931000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6966765333259651973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5517d7d38184a7a4198dc7f7d0e0f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHeight: 10
